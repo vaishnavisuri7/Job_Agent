@@ -6,29 +6,29 @@ from fastapi import HTTPException
 import logging
 import re
 
-# Configure logging
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Load GPT-J or GPT-Neo model
-MODEL_NAME = "EleutherAI/gpt-neo-1.3B"  # Replace with "EleutherAI/gpt-neo-2.7B" if needed
+# Use bigger models depending on hardware configuration
+MODEL_NAME = "EleutherAI/gpt-neo-1.3B" 
 logger.info(f"Loading model: {MODEL_NAME}")
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 model = AutoModelForCausalLM.from_pretrained(MODEL_NAME)
 
-# Initialize text generation pipeline
-generator = pipeline("text-generation", model=model, tokenizer=tokenizer, device=0)  # Use `device=0` for GPU
+# LLM initialization for the generation of text
+generator = pipeline("text-generation", model=model, tokenizer=tokenizer, device=0) # change this if using CPU
 
 def clean_generated_text(text: str) -> str:
     """Clean and format the generated text."""
     # Remove unwanted artifacts
     text = re.sub(r"(Please generate|Focus on the topic|In this case|Ensure the output)", "", text)
-    # Trim whitespace and remove extra spaces
-    return " ".join(text.split())
+    
+    return " ".join(text.split()) # to remove extra whitespaces
 
 def extract_sections(raw_output: str) -> tuple:
-    """Extract main question and related Q&A using regex."""
+
     main_question_match = re.search(r"Main Question:\s*(.*?)\n", raw_output, re.DOTALL)
     related_qas_match = re.search(r"Related Questions and Answers:\s*(.*)", raw_output, re.DOTALL)
 
@@ -37,8 +37,9 @@ def extract_sections(raw_output: str) -> tuple:
     
     return main_question, related_qas
 
+"""To filter repetitive content"""
 def filter_repetitive_sentences(text: str, max_sentences: int) -> str:
-    """Filter repetitive content and limit to a maximum number of sentences."""
+
     sentences = text.split(". ")
     seen_sentences = set()
     filtered_sentences = []
@@ -54,8 +55,7 @@ def filter_repetitive_sentences(text: str, max_sentences: int) -> str:
     return ". ".join(filtered_sentences) + ('.' if filtered_sentences else '')
 
 def generate_questions(request: QuestionRequest, db: Session) -> Answer:
-    """Generate interview questions and answers."""
-    # Construct prompt for generating interview questions
+
     prompt = (
         f"Generate a specific interview question for the role of {request.role}.\n"
         f"Focus on the topic: {request.user_input}.\n"
@@ -65,7 +65,7 @@ def generate_questions(request: QuestionRequest, db: Session) -> Answer:
     )
 
     try:
-        # Generate text using the model
+        # Generation of text using the above model
         response = generator(
             prompt,
             max_length=500,
@@ -78,10 +78,9 @@ def generate_questions(request: QuestionRequest, db: Session) -> Answer:
         raw_output = response[0]["generated_text"]
         logger.info(f"Generated raw output: {raw_output}")
 
-        # Extract main question and related Q&A
+
         main_question, related_qas = extract_sections(raw_output)
 
-        # Clean and filter text
         main_question = clean_generated_text(main_question)
         related_qas = clean_generated_text(related_qas)
         main_question = filter_repetitive_sentences(main_question, max_sentences=2)
@@ -97,7 +96,7 @@ def generate_questions(request: QuestionRequest, db: Session) -> Answer:
         db.commit()
         db.refresh(db_entry)
 
-        # Return the structured response
+        # Return the response
         return Answer(role=request.role, question=main_question, answer=related_qas)
 
     except Exception as e:

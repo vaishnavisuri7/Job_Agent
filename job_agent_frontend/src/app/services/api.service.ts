@@ -6,13 +6,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiService {
-  // private baseUrl = 'http://localhost:8000/generate'; // Replace with your backend URL
-
-  // constructor(private http: HttpClient) {}
-
-  // generateQuestion(payload: any): Observable<any> {
-  //   return this.http.post(`${this.baseUrl}/generate-question`, payload);
-  // }
 
   private apiUrl = 'http://localhost:8000/generate/'; // URL of the FastAPI backend
 

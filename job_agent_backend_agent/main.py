@@ -5,15 +5,13 @@ import crud, models, schemas
 
 from fastapi.middleware.cors import CORSMiddleware
 
-# Allowed origins for CORS
+
 origins = [
     "http://localhost:4200",  # Frontend URL
 ]
 
-# Initialize FastAPI app
 app = FastAPI()
 
-# Middleware for CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -22,10 +20,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Create database tables
 models.Base.metadata.create_all(bind=engine)
 
-# Dependency to get DB session
 def get_db():
     db = SessionLocal()
     try:
@@ -35,7 +31,7 @@ def get_db():
 
 @app.post("/generate/", response_model=schemas.Answer)
 def generate_response(request: schemas.QuestionRequest, db: Session = Depends(get_db)):
-    """Endpoint to generate interview questions and answers."""
+
     if not request.role or not request.user_input:
         raise HTTPException(status_code=400, detail="Role and user input cannot be empty.")
 

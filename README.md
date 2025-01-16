@@ -1,15 +1,15 @@
 # Job Interview Preparation Agent
 
 ## 🚀 Introduction
-As a job seeker for the past few months, I found it challenging to prepare efficiently for interviews. This led me to create a simple **Job Interview Preparation Agent**. It’s a humble attempt to help users by providing tailored interview questions, answers, and tips based on their desired role or topic. While it’s still a work in progress, I aim to continue improving its functionality.
+Navigating the job market as an active job seeker has been quite challenging, particularly when it comes to interview preparation. This led me to develop a **Job Interview Preparation Agent**. This tool aims to assist users by offering personalized interview questions, answers, and tips tailored to their specific job roles or topics. Although still evolving, this project is a step towards making interview prep more accessible and effective.
 
 ## 🛠️ Technologies Used
-- **Backend**: Developed with **FastAPI**, providing a fast and simple backend for handling user inputs and managing the flow of the agent.
-- **Control Flow**: **GPT-Neo** from Hugging Face is used for handling the control flow and generating responses, though the question and answer generation still requires further improvement due to resource constraints.
+- **Backend**: Utilizing **FastAPI** for a swift and straightforward backend that manages user inputs and orchestrates the agent's operations.
+- **Control Flow**: Currently, **GPT-Neo from Hugging Face** is employed for managing the control flow and generating responses. However, the system is designed to be flexible; other LLM models can also be substituted. If we have access to other APIs, they can be easily swapped in to potentially enhance response quality.
 - **Frontend**: The frontend is built using **Angular CLI**, designed to offer a simple and intuitive user interface.
 
 ## 🌱 Why This Project?
-This project is built around a topic that is highly relevant to me right now. As someone actively searching for jobs, I wanted to create a tool that can assist in preparing for interviews in an organized way. While the current version isn't perfect, it provides a foundation that can be expanded to generate useful insights, questions, and tips.
+This project resonates with my current situation as someone in the job market. I sought to create a tool that would facilitate organized and effective interview preparation. While the initial version has room for improvement, it lays down a solid foundation for further development, aiming to deliver valuable insights, questions, and tips for interviewees.
 
 ## 💡 Features
 - Users can input their role and the topic they want to focus on for interview preparation.
